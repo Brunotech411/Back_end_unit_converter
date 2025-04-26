@@ -3,6 +3,7 @@ from app.services.unit_converter import convert_units
 from app.services.temperature_converter import convert_temperature
 from app.services.thermocouple_converter import convert_thermocouple
 from app.services.rtd_converter import convert_rtd
+from app.services.level_transmitter_range import calculate_range
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -26,6 +27,12 @@ class ThermocoupleConversionRequest(BaseModel):
 class RTDConversionRequest(BaseModel):
     resistance: float  #'convertes RTD'
 
+class LevelRangeRequest(BaseModel):
+    altura_min: float
+    altura_max: float
+    densidade: float
+    zona_morta: float = 0.0
+
 # Rotas
 @router.post("/convert-pressure")
 def convert_pressure_route(request: ConversionRequest):
@@ -42,3 +49,7 @@ def convert_thermocouple_route(request: ThermocoupleConversionRequest):
 @router.post("/convert-rtd")
 def convert_rtd_route(request: RTDConversionRequest):
     return convert_rtd(request)
+
+@router.post("/calculate-level-range")
+def calculate_level_range_route(request: LevelRangeRequest):
+    return calculate_range(request)
