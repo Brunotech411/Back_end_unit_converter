@@ -1,17 +1,19 @@
 # 🔥 Conversor de Unidades - API FastAPI
 
 Este projeto é uma **API de conversão de unidades** desenvolvida com **FastAPI**.  
-Ela realiza conversões entre diferentes unidades físicas, conversão de temperaturas e conversão de termopares dos tipos mais utilizados na indústria (K, J e T).
+Ela realiza conversões entre diferentes unidades físicas, conversão de temperaturas, conversão de termopares e conversão de RTDs (sensores de resistência).
 
 ---
 
 ## 📦 Funcionalidades
 
-- Conversão de unidades físicas (pressão, volume, comprimento, etc.) usando [Pint](https://pint.readthedocs.io/).
-- Conversão de temperatura entre Celsius, Fahrenheit e Kelvin.
-- Conversão de termopares dos tipos **K**, **J** e **T**:
+- Conversão de unidades de **pressão** (ex: bar → psi) usando [Pint](https://pint.readthedocs.io/).
+- Conversão de **temperatura** entre Celsius, Fahrenheit e Kelvin.
+- Conversão de **termopares** dos tipos **K**, **J** e **T**:
   - Celsius para miliVolts (mV)
   - MiliVolts (mV) para Celsius
+- Conversão de **RTDs** (ex.: PT100):
+  - Resistência (Ohms) para temperatura (°C)
 - Documentação automática no **Swagger UI**.
 
 ---
@@ -37,9 +39,13 @@ Back_end_unit_converter/
 │   ├── services/
 │   │   ├── unit_converter.py      # Conversão de unidades (Pint)
 │   │   ├── temperature_converter.py # Conversão de temperaturas
-│   │   └── thermocouple_converter.py # Conversão de termopares
+│   │   ├── thermocouple_converter.py # Conversão de termopares
+│   │   └── rtd_converter.py         # Conversão de RTD
 │   └── __init__.py
-└── README.md
+├── venv/
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
 
 ---
@@ -65,7 +71,6 @@ Ative o ambiente:
   ```bash
   .\venv\Scripts\activate
   ```
-
 - Linux/Mac:
   ```bash
   source venv/bin/activate
@@ -92,9 +97,9 @@ http://127.0.0.1:8000/docs
 
 ## 🧪 Exemplos de uso
 
-### 🔹 Conversão de unidades físicas (`/convert`)
+### 🔹 Conversão de unidades de pressão (`/convert-pressure`)
 
-**POST** `/convert`
+**POST** `/convert-pressure`
 
 ```json
 {
@@ -103,6 +108,8 @@ http://127.0.0.1:8000/docs
   "to_unit": "psi"
 }
 ```
+
+---
 
 ### 🔹 Conversão de temperatura (`/convert-temperature`)
 
@@ -115,6 +122,8 @@ http://127.0.0.1:8000/docs
   "to_unit": "F"
 }
 ```
+
+---
 
 ### 🔹 Conversão de termopares (`/convert-thermocouple`)
 
@@ -130,10 +139,32 @@ http://127.0.0.1:8000/docs
 
 ---
 
+### 🔹 Conversão de RTD (`/convert-rtd`)
+
+**POST** `/convert-rtd`
+
+```json
+{
+  "resistance": 109.63
+}
+```
+
+**Resposta esperada:**
+
+```json
+{
+  "original": "109.63 Ω",
+  "converted": "25.00 °C"
+}
+```
+
+---
+
 ## 📚 Referências
 
 - [Tabela de conversão de unidades de pressão](#)
 - [NIST ITS-90 Thermocouple Database](https://srdata.nist.gov/its90/main/)
+- [Padrões de calibração de RTD (PT100)](https://www.omega.com/en-us/resources/rtd-pt100-sensors)
 
 ---
 

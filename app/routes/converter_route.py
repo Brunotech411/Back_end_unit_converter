@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from app.services.unit_converter import convert_units
 from app.services.temperature_converter import convert_temperature
 from app.services.thermocouple_converter import convert_thermocouple
+from app.services.rtd_converter import convert_rtd
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -22,9 +23,12 @@ class ThermocoupleConversionRequest(BaseModel):
     thermocouple_type: str
     direction: str  # 'celsius_para_mv' ou 'mv_para_celsius'
 
+class RTDConversionRequest(BaseModel):
+    resistance: float  #'convertes RTD'
+
 # Rotas
-@router.post("/convert")
-def convert_units_route(request: ConversionRequest):
+@router.post("/convert-pressure")
+def convert_pressure_route(request: ConversionRequest):
     return convert_units(request)
 
 @router.post("/convert-temperature")
@@ -34,3 +38,7 @@ def convert_temperature_route(request: TemperatureConversionRequest):
 @router.post("/convert-thermocouple")
 def convert_thermocouple_route(request: ThermocoupleConversionRequest):
     return convert_thermocouple(request)
+
+@router.post("/convert-rtd")
+def convert_rtd_route(request: RTDConversionRequest):
+    return convert_rtd(request)
